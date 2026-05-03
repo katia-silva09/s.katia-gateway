@@ -19,6 +19,10 @@ export class CreateEstudianteDto {
   @IsNotEmpty()
   paterno: string;
 
+  @IsString()
+  @IsOptional()
+  materno: string;
+
   @IsNumber()
   @IsNotEmpty()
   sexo_id: number;
