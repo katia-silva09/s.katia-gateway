@@ -1,0 +1,43 @@
+# 1. Dependencias
+
+FROM --platform=linux/amd64 node:22-alpine AS deps
+
+WORKDIR /usr/src/app
+
+COPY package.json ./
+COPY package-lock.json ./
+
+RUN npm install
+
+# 2. Build - Construir
+
+
+FROM --platform=linux/amd64 node:22-alpine as build
+
+WORKDIR /usr/src/app
+
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+
+COPY . .
+
+# 3. Test
+
+RUN npm run build
+
+RUN npm ci -f --only=production && npm cache clean --force
+
+# 4. Prod
+
+
+FROM --platform=linux/amd64 node:22-alpine as prod
+
+WORKDIR /usr/src/app
+
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
+
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
+CMD ["node", "dist/main.js"]
