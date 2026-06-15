@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+
 import { ClientProxy } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FILES_SERVICE } from 'src/config/service';
@@ -19,6 +20,7 @@ type UploadedFileType = {
   originalname: string;
   buffer: Buffer;
 };
+
 @Controller('files')
 export class FilesController {
   constructor(
@@ -41,6 +43,7 @@ export class FilesController {
 
     return this.filesClient.send({ cmd: 'create_files' }, dto);
   }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.filesClient.send({ cmd: 'get_one_files' }, id);
