@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -52,5 +53,9 @@ export class FilesController {
   @Get()
   findAll() {
     return this.filesClient.send({ cmd: 'get_all_files' }, {});
+  }
+  @Delete('students/:id')
+  deleteByModel(@Param('id', ParseIntPipe) id: number): void {
+    this.filesClient.emit({ cmd: 'delete_by_model' }, { model_id: id });
   }
 }
